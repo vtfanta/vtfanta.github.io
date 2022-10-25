@@ -1,0 +1,158 @@
+---
+title: "Learning Goals of DRS"
+author: "Vít Fanta"
+format: "html"
+---
+
+## Week 1
+
+1. **Recount briefly the history of man-made networks.**
+    
+    Internet, railroads, telegraphs, power grids, Bluetooth, IoT...
+   
+2. **Describe the general structure of a network.**
+
+    Points (vertices) connected by lines (edges).
+3. **Name a few examples of physical, biological, social and information networks.**
+
+    See 1.
+4. **Describe how the structure of various networks is revealed empirically.**
+
+    One example: Try to shut down a nuclear power plant and we will see what happens.
+
+## Week 2
+
+1. **Define a binary relation and establish a connection with its graph.**
+
+    A *binary relation* $\mathcal{R}$
+    is a subset of a Cartesian product of a set $\mathcal{V}$, i.e. $\mathcal{R}\subseteq\mathcal{V}\times\mathcal{V}$.
+    Nodes can be interpreted as the elements of 
+    $\mathcal{V}$ and the edge corresponds to the relation between the connected vertices.
+2. **Tell the difference between a graph and a hyper-graph. Depict a given hyper-graph by a bipartite network.**
+
+    Unlike in a graph, the edges in a *hypergraph* can have an
+    arbitrary (nonzero) number of vertices which they are interconnecting. A hypergraph can look like
+    $\mathcal{V} = \{v_1, v_2, v_3\}$, $E=\{\{v_1, v_2, v_3\}, \{v_1\}\}$ and its corresponding bipartite graph is
+    ```{mermaid}
+    graph TD
+    v1((v1)) --- e1((e1))
+    v2((v2)) --- e1
+    v3((v3)) --- e1
+    v1 --- e2((e2))
+    ```
+
+3. **Explain the difference between a multi-graph and a simple graph.**
+
+    In an ordinary graph, only a single edge can exist between
+    a pair of edges. In a multigraph a single pair of vertices
+    can have multiple edges between them.
+
+4. **Define the graph adjacency matrix.**
+
+    In a graph with $n$ vertices, the *adjacency matrix* is $A\in\mathbb{R}^{n\times n}$ and 
+    $$ A_{i j} = \begin{cases} 1\quad \text{if } j\to i\in E,\\
+    0\quad \text{otherwise}.\end{cases} $$
+
+5. **Compare the co-citation and bibliographic coupling.**
+    
+    *Cocitation* is the number of nodes which cite $i$ and also $j$, i.e.[^1]
+    $$ \begin{align*} C_{ij} &= A_{ik}A_{jk} = A_{ik}A_{kj}^T, \\
+        C &= AA^T = C^T.
+        \end{align*}
+    $$
+
+    *Bibliographic coupling* is the number of nodes which are cited by $i$ and also $j$, i.e.
+    $$
+    \begin{align*}
+        B_{ij} &= A_{ki}A_{kj} = A_{ik}^TA_{kj},\\
+        B &= A^TA = B^T.
+    \end{align*}$$
+    
+    [^1]: Einstein's summation convention is used.
+
+6. **Explain the two one-mode projections of a bipartite network.**
+
+    IDK
+
+7. **Define planar networks and state the 'four color' theorem.**
+
+    Planar networks are such graphs which can be drawn on a plane without any two edges intersecting each other. The 'four colour' theorem states that the chromatic number of any planar netwok is $4$ at most.
+
+8. **Explain the difference between a sparse and a dense network.**
+
+    Let us define *connectance* $\rho = \frac{c}{n-1}\approx\frac{c}{n}\text{ as }n\to\infty$, where $c=\frac{2m}{n}$ is the mean degree. A network is called *sparse* if $\rho\to0$ for $n\to\infty$. It is called *dense* otherwise.
+
+## Week 3
+
+1. **Define a path and explain the difference between an Eulerian and a Hamiltonian path.**
+
+    A *path* is a sequence of subsequent edges. *Eulerian path* is a path which uses every edge of the graph precisely once. *Hamiltonian path* is a path which visits every vertex of the graph precisely once.
+
+2. **State the min-cut max-flow theorem.**
+
+    Maximal flow equals the sum of flows on the minimal cut.
+
+3. **Define the graph Laplacian matrix and its relation to diffusion processes on graphs.**
+
+    *Graph Laplacian matrix* is defined as $L = D - A$, where
+    D is a diagonal matrix of the vertex in-degrees. The equation
+    $$
+        \frac{\partial u(x,t)}{\partial t} = c\Delta u(x,t)
+    $$
+    is related (when used on a finite-dimensional system) to
+    $$
+        \dot{u} = -Lu.
+    $$
+4. **State the Geršgorin disc theorem and explain how it is applied to the graph Laplacian.**
+
+    A complex matrix $M\in\mathbb{C}^{n\times n}$ has eigenvalues
+    lying in the union of $n$ circles in the complex plane.
+    The circles are defined as 
+    $$
+    \mathcal{K}_i = \{ z\in\mathbb{C} : |z-M_{ii}|\leq \sum_{j\neq i}|M_{ij}| \}
+    $$
+    and each $\mathcal{K}$ contains at least one eigenvalue.
+
+    A Laplacian for an undirected graph is symmetric and positive semi-definite. Also, by the Geršgorin's theorem,
+    $\lambda_i(L)\in\mathcal{K}(d_i, d_i)$, so $\lambda_i(L)$ are nonnegative $\forall i$.
+
+5. **Define the Fiedler eigenvalue and explain its significance for the graph topology.**
+
+    *The Fiedler eigenvalue* (also called *algebraic connectivity*) is the smallest non-zero (real part for directed graphs) eigenvalue of $L$. Its magnitude is directly proportional to the overall connectivity of the graph.
+
+6. **Define the Frobenius form of the graph Laplacian and explain how it reveals the graph topology.**
+
+    Let us say that our graph has $c$ components of sizes
+    $n_1, n_2,\ldots,n_c$. Then there exists a corresponding labeling such that the first $n_1$ vertices lie in the first component, the next $n_2$ vertices in the second and so on.
+    The Laplacian of such graph is block-diagonal with $n_i\times n_i$ blocks and zeros elsewhere. Moreover, each block is itself a Laplacian of the corresponding component. Because of the structure, we can construct $c$ eigenvectors to the zero eigenvalue. For example,
+    $$
+        \mathbf{v} = (\underbrace{1,1,\ldots,1}_{n_1\times},0,\ldots,0).
+    $$
+    It can be even shown that the algebraic multiplicity of the zero eigenvalue is exactly equal to the number of components.
+    (This discussion is from the Introduction to Networks book)
+
+## Week 4
+
+
+1. **Define the Metzler matrix.**
+
+A matrix has the Metzler property if all off-diagonal 
+elements are non-negative. 
+
+2. **Define the Z-matrix and the M-matrix.**
+
+The Z-matrix has all off-diagonal elements
+non-positive. An M-matrix is a Z-matrix with all eigenvalues having non-negative real parts.
+
+3. **Explain how the geometric multiplicity of eigenvalues differ from the algebraic one.**
+
+
+
+4. **Explain the meaning of the geometric multiplicity of a zero eigenvalue for graph Laplacians.**
+5. **Define the left zero eigenvector.**
+6. **Define a balanced graph.**
+7. **Define a strongly connected graph.**
+8. **Define the degree centrality.**
+9. **Motivate the eigenvector centrality.**
+10. **Explain the difference between the eigenvector centrality and the Katz centrality.**
+
